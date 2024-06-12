@@ -1,0 +1,88 @@
+{% extends '_base.html' %}
+
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block page_title %}جزئیات کتاب{{ books.title }}{% endblock %}
+
+{% block content %}
+
+    <div class="container mt-5" dir="rtl">
+        <div class="">
+            <div class="">
+                <div class="d-flex justify-content-center">
+                    <div class="row w-sm-75 w-100">
+                        <div class="col-xs-12 col-md-3 d-flex justify-content-center">
+                            <div class="shadow">
+                                {% if books.cover %}
+                                    <img src="{{ books.cover.url }}" class="img-fluid rounded-start" alt="...">
+                                {% else %}
+                                    <img src="{% static "icons/noneimage.jpg" %}" class="img-fluid rounded-start"
+                                         alt="...">
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6 text-center text-md-end mt-md-1 mt-4">
+                            <h1>{{ books.title }}</h1>
+                            <h4 class="small my-1"><span class="text-muted">نویسنده: </span>{{ books.author }}</h4>
+                            <div class="d-flex  mt-2">
+                                <a class="text-decoration-none mx-1" href="{% url 'book_update' books.id %}">
+                                    <button class="btn btn-warning" type="submit">ویرایش</button>
+                                </a>
+                                <a class="text-decoration-none mx-2" href="{% url 'book_delete' books.id %}">
+                                    <button class="btn btn-danger" type="submit">حذف</button>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-3 d-flex flex-column">
+                            <h3 class="align-self-center pt-2 text-muted align-self-md-end">
+                                {{ books.price }} تومان
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-center">
+                    <div class="my-3 p-5 w-sm-75 w-100">{{ books.description|linebreaksbr }}</div>
+                </div>
+
+                <div class="d-flex justify-content-center">
+                    <div class="card shadow my-3 p-5 w-sm-75 w-100">
+                        <h2 class="mb-5">نظرات:</h2>
+                        {% if comments %}
+                            {% for comment in comments %}
+                                <div class="border-bottom mb-3">
+                                    <h4 class="mb-3">{{ comment.user.username }}</h4>
+                                    {% if comment.recommend %}
+                                        <img src="{% static "icons/like.png" %}" alt="" height="45"
+                                             class="d-inline-block align-text-top">
+                                    {% else %}
+                                        <img src="{% static "icons/dislike.png" %}" alt="" height="45"
+                                             class="d-inline-block align-text-top">
+                                    {% endif %}
+                                    <h6>{{ comment.text }}</h6>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="border-bottom mb-3">
+                                <p>کامنتی برای این کتاب ثبت نشده است. اولین نفری باشید که کامنت میگذارد...</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-center">
+                    <div class="card shadow my-3 p-5 w-sm-75 w-100">
+                        <h3>نظر خود را وارد کنید:</h3>
+                        <form method="POST">
+                            {% csrf_token %}
+                            {{ comment_form|crispy }}
+                            <button type="submit" class="btn btn-primary mt-3">ارسال</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

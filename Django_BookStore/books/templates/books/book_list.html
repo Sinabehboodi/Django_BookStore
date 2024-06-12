@@ -1,0 +1,51 @@
+{% extends '_base.html' %}
+
+{% load static %}
+
+{% block page_title %}لیست کتاب ها{% endblock %}
+F
+{% block content %}
+
+    <div class="container mt-4">
+        <div class="row flex-row-reverse">
+            {% for book in books %}
+                <div class="card m-2" style="max-width: 45%">
+                    <div class="row g-0 h-100" dir="rtl">
+                        <div class="col-md-4">
+                            {% if book.cover %}
+                                <img src="{{ book.cover.url }}" class="img-fluid rounded-start" alt="...">
+                            {% else %}
+                                <img src="{% static "icons/noneimage.jpg" %}" class="img-fluid rounded-start" alt="...">
+                            {% endif %}
+                        </div>
+                        <div class="col-md-8 h-100">
+                            <div class="d-flex flex-column justify-content-between h-100">
+                                <div class="card-body">
+                                    <a class="text-decoration-none" href="{{ book.get_absolute_url }}"><h3
+                                            class="card-title "><strong>{{ book.title }}</strong></h3></a>
+                                    <p class="card-text pt-3">{{ book.description|truncatewords:30 }}</p>
+                                    <p class="text-muted">نویسنده: {{ book.author }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center mt-3">
+            {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">قبلی</a></li>
+            {% endif %}
+            <li class="page-item"><a class="page-link" href="#">{{ page_obj.number }}</a></li>
+
+            {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">بعدی</a></li>
+            {% endif %}
+
+        </ul>
+    </nav>
+
+{% endblock %}
